@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -11,6 +12,7 @@ import {
 } from "lucide-react";
 
 import { getProducts } from "../../lib/api";
+import ProductImage from "@/components/ProductImage";
 
 type Product = {
   id: number;
@@ -106,10 +108,6 @@ export default function ProductDetailsClient() {
         ? "down"
         : "flat");
 
-  const imageIsUrl =
-    product.image?.startsWith("http://") ||
-    product.image?.startsWith("https://");
-
   return (
     <main className="container product-details-section">
       <Link href="/category" className="back-link">
@@ -119,14 +117,11 @@ export default function ProductDetailsClient() {
 
       <div className="product-details-card">
         <div className="product-details-image">
-          {imageIsUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={product.image} alt={product.nameBn} />
-          ) : (
-            <span className="product-details-emoji">
-              {product.image || "🛒"}
-            </span>
-          )}
+          <ProductImage
+            image={product.image}
+            alt={product.nameBn}
+            fallbackClassName="product-details-emoji"
+          />
         </div>
 
         <div className="product-details-content">

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -10,6 +11,7 @@ import {
 } from "lucide-react";
 
 import { getProducts } from "./lib/api";
+import ProductImage from "@/components/ProductImage";
 
 type Product = {
   id: number;
@@ -55,24 +57,16 @@ function getPriceChange(product: Product) {
 function ProductCard({ product }: { product: Product }) {
   const direction = getDirection(product);
 
-  const isImageUrl =
-    product.image?.startsWith("http://") ||
-    product.image?.startsWith("https://");
-
   return (
     <article className="product-card" key={product.id}>
       <Link
         href={`/product/${product.slug}`}
         className="product-image"
       >
-        {isImageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={product.image} alt={product.nameBn} />
-        ) : (
-          <span className="product-placeholder product-emoji">
-            {product.image || "🛒"}
-          </span>
-        )}
+        <ProductImage
+          image={product.image}
+          alt={product.nameBn}
+        />
       </Link>
 
       <p className="product-category">
@@ -106,7 +100,8 @@ function ProductCard({ product }: { product: Product }) {
       </div>
 
       <p className="product-unit">
-        প্রতি {product.unit === "kg"
+        প্রতি{" "}
+        {product.unit === "kg"
           ? "কেজি"
           : product.unit === "litre"
             ? "লিটার"
@@ -196,7 +191,6 @@ export default function Home() {
           </div>
 
           <div className="hero-visual">
-            {/* Your existing hero image */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/hero.png"
@@ -331,26 +325,64 @@ export default function Home() {
         </Link>
       </section>
 
-      {/* Footer */}
+      {/* Professional Footer */}
       <footer className="site-footer">
-        <div className="container footer-inner">
-          <div>
-            <strong className="footer-brand">
-              <ShoppingBasket size={21} /> Bazar Dor
-            </strong>
+        <div className="container footer-main">
+          {/* Brand Information */}
+          <div className="footer-brand-section">
+            <Link href="/" className="footer-brand">
+              <span className="footer-brand-icon">
+                <ShoppingBasket size={23} />
+              </span>
 
-            <p>আপনার নিত্যবাজার, আপনার হাতেই।</p>
+              <span>
+                <strong>Bazar Dor</strong>
+                <small>আপনার নিত্যবাজার</small>
+              </span>
+            </Link>
+
+            <p className="footer-description">
+              প্রতিদিনের নিত্যপ্রয়োজনীয় পণ্যের বাজারদর জানুন
+              সহজেই। সঠিক তথ্যের মাধ্যমে পরিকল্পিত ও সাশ্রয়ী
+              কেনাকাটায় থাকুন এক ধাপ এগিয়ে।
+            </p>
           </div>
 
-          <div className="footer-links">
+          {/* Quick Links */}
+          <div className="footer-column">
+            <h3>Quick Links</h3>
             <Link href="/">হোম</Link>
-            <Link href="/category">ক্যাটাগরি</Link>
-            <Link href="/sign-in">সাইন ইন</Link>
+            <Link href="/category">সকল ক্যাটাগরি</Link>
+            <Link href="/#products">সকল পণ্য</Link>
           </div>
 
-          <p className="footer-copy">
-            © {new Date().getFullYear()} Bazar Dor
-          </p>
+          {/* Account Links */}
+          <div className="footer-column">
+            <h3>My Account</h3>
+            <Link href="/signin">সাইন ইন</Link>
+            <Link href="/signup">রেজিস্ট্রেশন</Link>
+            <Link href="/profile">আমার প্রোফাইল</Link>
+          </div>
+
+          {/* About */}
+          <div className="footer-column footer-about">
+            <h3>About Bazar Dor</h3>
+            <p>
+              বাংলাদেশের নিত্যপ্রয়োজনীয় পণ্যের বাজারদর
+              সহজে খুঁজে পাওয়ার একটি ডিজিটাল প্ল্যাটফর্ম।
+            </p>
+          </div>
+        </div>
+
+        {/* Copyright */}
+        <div className="footer-bottom">
+          <div className="container footer-bottom-inner">
+            <p>
+              © {new Date().getFullYear()} Bazar Dor. All rights reserved.
+            </p>
+
+            <span>Made for smarter shopping in Bangladesh.</span>
+          </div>
         </div>
       </footer>
     </main>
