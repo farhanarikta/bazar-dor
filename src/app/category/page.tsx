@@ -44,7 +44,6 @@ function getProductList(data: any): Product[] {
   return [];
 }
 
-// Replace unsupported category emojis with compatible alternatives.
 function getCategoryIcon(icon: string): string {
   const iconFallback: Record<string, string> = {
     "🫘": "🥜",
@@ -194,7 +193,9 @@ export default function CategoryPage() {
                 ? "সকল পণ্য"
                 : categories.find((c) => c.id === selectedCategory)?.name}
             </h2>
-            <p>{filteredProducts.length}টি পণ্য পাওয়া গেছে</p>
+            <p>
+              {filteredProducts.length.toLocaleString("bn-BD")}টি পণ্য পাওয়া গেছে
+            </p>
           </div>
         </div>
 
@@ -233,18 +234,18 @@ export default function CategoryPage() {
 
                 <div className="product-price-row">
                   <strong>
-                    ৳{product.today.toLocaleString("en-BD")}
+                    ৳{Number(product.today).toLocaleString("bn-BD")}
                   </strong>
 
                   {product.change.dir === "up" ? (
                     <span className="price-up">
                       <ArrowUpRight size={15} />
-                      {product.change.pct}%
+                      {product.change.pct.toLocaleString("bn-BD")}%
                     </span>
                   ) : product.change.dir === "down" ? (
                     <span className="price-down">
                       <ArrowDownRight size={15} />
-                      {Math.abs(product.change.pct)}%
+                      {Math.abs(product.change.pct).toLocaleString("bn-BD")}%
                     </span>
                   ) : (
                     <span className="muted">পরিবর্তন নেই</span>

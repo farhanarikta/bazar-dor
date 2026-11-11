@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -81,18 +80,18 @@ function ProductCard({ product }: { product: Product }) {
 
       <div className="product-price-row">
         <strong>
-          ৳{Number(product.today).toLocaleString("en-BD")}
+          ৳{Number(product.today).toLocaleString("bn-BD")}
         </strong>
 
         {direction === "up" ? (
           <span className="price-up">
             <ArrowUpRight size={15} />
-            ৳{getPriceChange(product).toLocaleString("en-BD")}
+            ৳{getPriceChange(product).toLocaleString("bn-BD")}
           </span>
         ) : direction === "down" ? (
           <span className="price-down">
             <ArrowDownRight size={15} />
-            ৳{getPriceChange(product).toLocaleString("en-BD")}
+            ৳{getPriceChange(product).toLocaleString("bn-BD")}
           </span>
         ) : (
           <span className="muted">পরিবর্তন নেই</span>

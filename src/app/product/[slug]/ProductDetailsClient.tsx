@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -9,10 +8,18 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   ShoppingBasket,
+  MapPin,
 } from "lucide-react";
 
 import { getProducts } from "../../lib/api";
 import ProductImage from "@/components/ProductImage";
+
+type Market = {
+  market: string;
+  division: string;
+  min: number;
+  max: number;
+};
 
 type Product = {
   id: number;
@@ -30,6 +37,7 @@ type Product = {
     dir: "up" | "down" | "flat";
     pct: number;
   };
+  markets?: Market[];
 };
 
 function getProductList(data: any): Product[] {
@@ -37,6 +45,10 @@ function getProductList(data: any): Product[] {
   if (Array.isArray(data?.data)) return data.data;
   if (Array.isArray(data?.products)) return data.products;
   return [];
+}
+
+function formatPrice(value: number) {
+  return `৳${Number(value).toLocaleString("bn-BD")}`;
 }
 
 export default function ProductDetailsClient() {
@@ -108,6 +120,26 @@ export default function ProductDetailsClient() {
         ? "down"
         : "flat");
 
+  const markets = product.markets ?? [];
+
+  const lowestPrice =
+    markets.length > 0
+      ? Math.min(...markets.map((market) => market.min))
+      : null;
+
+  const highestPrice =
+    markets.length > 0
+      ? Math.max(...markets.map((market) => market.max))
+      : null;
+
+  const averagePrice =
+    markets.length > 0
+      ? markets.reduce(
+          (total, market) => total + (market.min + market.max) / 2,
+          0
+        ) / markets.length
+      : null;
+
   return (
     <main className="container product-details-section">
       <Link href="/category" className="back-link">
@@ -141,7 +173,7 @@ export default function ProductDetailsClient() {
           </p>
 
           <div className="details-price">
-            ৳{Number(product.today).toLocaleString("en-BD")}
+            {formatPrice(product.today)}
           </div>
 
           <p className="details-label">বর্তমান বাজারদর</p>
@@ -165,36 +197,99 @@ export default function ProductDetailsClient() {
           <div className="price-history">
             <div>
               <span>গতকালের দাম</span>
-              <strong>
-                ৳{Number(product.yesterday).toLocaleString("en-BD")}
-              </strong>
+              <strong>{formatPrice(product.yesterday)}</strong>
             </div>
 
             {product.lastWeek !== undefined && (
               <div>
                 <span>গত সপ্তাহের দাম</span>
-                <strong>
-                  ৳{Number(product.lastWeek).toLocaleString("en-BD")}
-                </strong>
+                <strong>{formatPrice(product.lastWeek)}</strong>
               </div>
             )}
 
             {product.lastMonth !== undefined && (
               <div>
                 <span>গত মাসের দাম</span>
-                <strong>
-                  ৳{Number(product.lastMonth).toLocaleString("en-BD")}
-                </strong>
+                <strong>{formatPrice(product.lastMonth)}</strong>
               </div>
             )}
           </div>
-
-          <Link href="/category" className="button button-primary">
-            <ShoppingBasket size={18} />
-            অন্যান্য পণ্য দেখুন
-          </Link>
         </div>
       </div>
+
+      {markets.length > 0 && (
+        <>
+          <section className="price-history-section">
+            <h2>বাজারদরের সারসংক্ষেপ</h2>
+
+            <div className="price-history">
+              <div>
+                <span>সর্বনিম্ন দাম</span>
+                <strong>
+                  {lowestPrice !== null ? formatPrice(lowestPrice) : "—"}
+                </strong>
+              </div>
+
+              <div>
+                <span>সর্বোচ্চ দাম</span>
+                <strong>
+                  {highestPrice !== null ? formatPrice(highestPrice) : "—"}
+                </strong>
+              </div>
+
+              <div>
+                <span>গড় দাম (আনুমানিক)</span>
+                <strong>
+                  {averagePrice !== null
+                    ? formatPrice(Math.round(averagePrice))
+                    : "—"}
+                </strong>
+              </div>
+            </div>
+
+            <p className="muted">
+              গড় দাম প্রতিটি বাজারের সর্বনিম্ন ও সর্বোচ্চ দামের মধ্যবিন্দু
+              থেকে হিসাব করা হয়েছে।
+            </p>
+          </section>
+
+          <section className="market-prices-section">
+            <h2>বাজারভিত্তিক দাম</h2>
+
+            <div className="market-prices-list">
+              {markets.map((market, index) => (
+                <div
+                  className="market-price-card"
+                  key={`${market.market}-${index}`}
+                >
+                  <div className="market-info">
+                    <h3>{market.market}</h3>
+                    <p>
+                      <MapPin size={14} />
+                      {market.division}
+                    </p>
+                  </div>
+
+                  <div className="market-price-range">
+                    <span>সর্বনিম্ন</span>
+                    <strong>{formatPrice(market.min)}</strong>
+                  </div>
+
+                  <div className="market-price-range">
+                    <span>সর্বোচ্চ</span>
+                    <strong>{formatPrice(market.max)}</strong>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </>
+      )}
+
+      <Link href="/category" className="button button-primary">
+        <ShoppingBasket size={18} />
+        অন্যান্য পণ্য দেখুন
+      </Link>
     </main>
   );
 }
