@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "@/app/lib/auth-client";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 export default function SigninPage() {
   const router = useRouter();
@@ -55,8 +55,6 @@ export default function SigninPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#f1f7f0] px-4">
-      <Toaster position="top-center" />
-
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
         <h1 className="mb-6 text-center text-2xl font-bold text-[#173b2a]">
           Sign In to Bazar Dor

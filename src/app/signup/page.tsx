@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signUp, signIn } from "@/app/lib/auth-client";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -72,8 +72,6 @@ export default function SignupPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-[#f1f7f0] px-4 py-10">
-      <Toaster position="top-center" />
-
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
         <div className="mb-7 text-center">
           <Link href="/" className="text-3xl font-bold text-[#173b2a]">
